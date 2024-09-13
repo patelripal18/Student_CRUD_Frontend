@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Student Details</h1>
+    <form id="studentForm" novalidate>
+
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" id="firstName"
+                   onkeyup="this.value=this.value.replace(/[^a-zA-Z]/g,'');" required>
+            <div class="invalid-feedback">Enter the First Name.</div>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" id="lastName"
+                   onkeyup="this.value=this.value.replace(/[^a-zA-Z]/g,'');" required>
+            <div class="invalid-feedback">Enter the Last Name.</div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email"
+                   onkeyup="this.value=this.value.replace(/[^a-zA-Z0-9@._-]/g,'');" required>
+
+            <div class="invalid-feedback">Enter the valid email</div>
+
+        </div>
+        <div class="form-group">
+            <label for="phoneNo">Phone No</label>
+            <input type="number" class="form-control" id="phoneNo"
+                   onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" required>
+            <div class="invalid-feedback">enter the phone number</div>
+
+        </div>
+        <div class="form-group">
+            <label for="studentClass">Class</label>
+            <input type="text" class="form-control" id="studentClass"
+                   onkeyup="this.value=this.value.replace(/[^a-zA-Z0-9_-]/g,'');" required>
+            <div class="invalid-feedback">enter the class</div>
+        </div>
+        <div class="form-group">
+            <label for="stream">Stream</label>
+            <input type="text" class="form-control" id="stream"
+                   onkeyup="this.value=this.value.replace(/[^a-zA-Z\s]/g,'');" required>
+            <div class="invalid-feedback">enter the stream</div>
+        </div>
+        <div class="form-group">
+            <label for="year">Year</label>
+            <input type="number" class="form-control" id="year" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                   required>
+            <div class="invalid-feedback">enter the year</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Student</button>
+    </form>
+
+    <h2 class="mt-5">Student List</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th>Class</th>
+            <th>Stream</th>
+            <th>Year</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="studentTableBody">
+        </tbody>
+    </table>
+</div>
+
+<!-- View/Edit Modal -->
+<div class="modal fade" id="viewEditModal" tabindex="-1" role="dialog" aria-labelledby="viewEditModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewEditModalLabel">Student Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="viewEditStudentForm" >
+
+                    <input type="hidden" id="editStudentId" >
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" disabled required>
+                        <div class="invalid-feedback">Enter the First Name</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" disabled required>
+                        <div class="invalid-feedback">Enter the last Name</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" class="form-control" id="editEmail" disabled required>
+                        <div class="invalid-feedback">Enter the valid email</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhoneNo">Phone No</label>
+                        <input type="text" class="form-control" id="editPhoneNo" disabled>
+                        <div class="invalid-feedback">enter the phone number</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentClass">Class</label>
+                        <input type="text" class="form-control" id="editStudentClass" disabled>
+                        <div class="invalid-feedback">enter the class</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editStream">Stream</label>
+                        <input type="text" class="form-control" id="editStream" disabled required>
+                        <div class="invalid-feedback">enter the stream</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editYear">Year</label>
+                        <input type="number" class="form-control" id="editYear" disabled required>
+                        <div class="invalid-feedback">enter the year</div>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary d-none" id="updateButton">Update Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchStudents();
+
+        // Create Student
+        document.getElementById("studentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            document.getElementById("email").addEventListener("input", function() {
+              const emailInput = this.value;
+               const emailField = this;
+
+              // Check if the email contains ".com"
+             if (!emailInput.includes("@gmail.com")) {
+               emailField.setCustomValidity("Invalid email"); // Set custom validity message
+                } else {
+               emailField.setCustomValidity(""); // Reset validity if ".com" is present
+    }
+});
+
+            if (!this.checkValidity()) {
+                event.stopPropagation();
+                this.classList.add('was-validated');
+                return;
+            }
+
+            const student = {
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                email: document.getElementById("email").value,
+                phoneNo: document.getElementById("phoneNo").value,
+                studentClass: document.getElementById("studentClass").value,
+                stream: document.getElementById("stream").value,
+                year: document.getElementById("year").value
+            };
+
+            fetch('http://localhost:8080/api/students/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            })
+            .then(response => response.json())
+            .then(data => {
+                fetchStudents(); // Refresh the student list
+                document.getElementById("studentForm").reset(); // Clear the form
+            });
+        });
+
+        // View/Edit Student
+        document.getElementById("viewEditStudentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+           const studentId = document.getElementById("editStudentId").value;
+            const student = {
+                firstName: document.getElementById("editFirstName").value,
+                lastName: document.getElementById("editLastName").value,
+                email: document.getElementById("editEmail").value,
+                phoneNo: document.getElementById("editPhoneNo").value,
+                studentClass: document.getElementById("editStudentClass").value,
+                stream: document.getElementById("editStream").value,
+                year: document.getElementById("editYear").value
+            };
+
+            fetch(`http://localhost:8080/api/students/${studentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            })
+            .then(response => response.json())
+            .then(data => {
+                fetchStudents(); // Refresh the student list
+                $('#viewEditModal').modal('hide'); // Close the modal
+            });
+        });
+    });
+
+    // Fetch and display students
+    function fetchStudents() {
+        fetch('http://localhost:8080/api/students')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById("studentTableBody");
+                tbody.innerHTML = '';
+                data.forEach(student => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${student.id}</td>
+                        <td>${student.firstName}</td>
+                        <td>${student.lastName}</td>
+                        <td>${student.email}</td>
+                        <td>${student.phoneNo}</td>
+                        <td>${student.studentClass}</td>
+                        <td>${student.stream}</td>
+                        <td>${student.year}</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="viewStudent(${student.id})">View</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">Delete</button>
+                            <button class="btn btn-primary btn-sm" onclick="editStudent(${student.id})">Edit</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+    }
+
+    // View student details and populate the view form
+    function viewStudent(id) {
+
+          fetch(`http://localhost:8080/api/students/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                // Populate the form fields with student data
+                document.getElementById("editStudentId").value = data.id;
+                document.getElementById("editFirstName").value = data.firstName;
+                document.getElementById("editLastName").value = data.lastName;
+                document.getElementById("editEmail").value = data.email;
+                document.getElementById("editPhoneNo").value = data.phoneNo;
+                document.getElementById("editStudentClass").value = data.studentClass;
+                document.getElementById("editStream").value = data.stream;
+                document.getElementById("editYear").value = data.year;
+
+
+                // Disable fields to prevent editing
+                setFormEditable(false);
+
+
+                         // Show the modal
+                $('#viewEditModal').modal('show');
+            });
+    }
+
+     // Function to set form fields as editable or not
+    function setFormEditable(isEditable) {
+        document.getElementById("editFirstName").disabled = !isEditable;
+        document.getElementById("editLastName").disabled = !isEditable;
+        document.getElementById("editEmail").disabled = !isEditable;
+        document.getElementById("editPhoneNo").disabled = !isEditable;
+        document.getElementById("editStudentClass").disabled = !isEditable;
+        document.getElementById("editStream").disabled = !isEditable;
+        document.getElementById("editYear").disabled = !isEditable;
+    }
+
+     // edit
+
+    function editStudent(id) {
+        fetch(`http://localhost:8080/api/students/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                // Populate the form fields with student data
+                document.getElementById("editStudentId").value = data.id;
+                document.getElementById("editFirstName").value = data.firstName;
+                document.getElementById("editLastName").value = data.lastName;
+                document.getElementById("editEmail").value = data.email;
+                document.getElementById("editPhoneNo").value = data.phoneNo;
+                document.getElementById("editStudentClass").value = data.studentClass;
+                document.getElementById("editStream").value = data.stream;
+                document.getElementById("editYear").value = data.year;
+
+                // Enable fields to allow editing
+                setFormEditable(true);
+
+                // Show the update button
+                document.getElementById("updateButton").classList.remove("d-none");
+
+                // Show the modal
+                $('#viewEditModal').modal('show');
+            });
+    }
+
+        // delete
+
+    function deleteStudent(id){
+
+    fetch(`http://localhost:8080/api/students/${id}`,{
+    method: 'DELETE'
+    })
+    .then(() =>{
+    fetchStudents();
+
+    });
+    }
+
+</script>
+</body>
+</html>
